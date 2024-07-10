@@ -1,17 +1,22 @@
 import React, { useState } from 'react'
 import "./WorkHour.css"
 import SideProfileMenu from '../../components/SideProfileMenu/SideProfileMenu'
-import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
-import { Formik } from 'formik';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
+import { Formik, Form } from 'formik';
 import TextInput from '../../utilities/customFormControls/textInput';
-import { Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from 'semantic-ui-react';
+import AddWorkHourRequest from '../../models/requests/workHour/addWorkHourRequest';
+import authService from '../../services/authService';
+import workHourService from '../../services/workHourService';
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function WorkHour() {
 
     const [show, setShow] = useState(false);
+    const user = authService.getUserInfo();
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
 
     const initialValues = {
         startHour: "",
@@ -19,9 +24,22 @@ export default function WorkHour() {
         studyDate: "",
     };
 
+    const handleAddWorkHour = async (workHour: any) => {
+        console.log("workHour" + workHour);
+
+        const addWorkHour: AddWorkHourRequest = {
+            accountId: user.id,
+            startHour: workHour.startHour,
+            endHour: workHour.endHour,
+            studyDate: workHour.studyDate
+        }
+        await workHourService.add(addWorkHour);
+        console.log("addWorkHour" + addWorkHour);
+    }
+
+
     return (
         <div className='workhour-page container'>
-
             <div className="row">
                 <div className="col-md-3 mt-5">
                     <SideProfileMenu />
@@ -49,15 +67,13 @@ export default function WorkHour() {
                             <Formik
                                 initialValues={initialValues}
                                 onSubmit={(values) => {
-                                    console.log(values);
+                                    handleAddWorkHour(values)
 
                                 }}>
 
                                 <Form className="workhour-page-form" >
                                     <Row >
-
                                         <Col md={6} className=' mb-5 mt-4'>
-
                                             <TextInput
                                                 type="time"
                                                 name="startHour"
@@ -90,13 +106,13 @@ export default function WorkHour() {
                                             </TextInput>
                                         </Col>
                                     </Row>
+                                    <Button className="mb-2" type="submit">
+                                        Kaydet
+                                    </Button>
                                 </Form>
                             </Formik>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" className='workhour-modal-footer-button' onClick={handleClose}>
-                                Kapat
-                            </Button>
                         </Modal.Footer>
                     </Modal>
 
@@ -125,26 +141,7 @@ export default function WorkHour() {
                         </tbody>
                     </table>
 
-                    <Table singleLine className='mt-4'>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHeaderCell>İsim</TableHeaderCell>
-                                <TableHeaderCell>Başlangıç Saati</TableHeaderCell>
-                                <TableHeaderCell>Bitiş Saati</TableHeaderCell>
-                                <TableHeaderCell>Gün</TableHeaderCell>
-                            </TableRow>
-                        </TableHeader>
 
-                        <TableBody>
-                            <TableRow>
-                                <TableCell>Anıl Gültekin</TableCell>
-                                <TableCell>09:00</TableCell>
-                                <TableCell>18:00</TableCell>
-                                <TableCell>9 Temmuz 2024</TableCell>
-                            </TableRow>
-
-                        </TableBody>
-                    </Table>
                 </div>
             </div>
         </div>

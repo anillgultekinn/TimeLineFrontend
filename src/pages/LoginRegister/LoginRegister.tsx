@@ -48,7 +48,6 @@ export default function LoginRegister() {
 
                                     <TextInput name="password" className="mb-4" type="password" placeholder="Şifre" />
                                     <Button className="mb-4" type="submit">Giriş Yap</Button>
-                                    <Button className='forget-password'>Şifremi Unuttum</Button>
 
                                 </Form>
                             </Formik>
