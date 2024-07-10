@@ -1,0 +1,89 @@
+.side-profile-menu h6 {
+    border-radius: 12px;
+    font-size: 16px;
+    padding: 12px 18px;
+    border: 1px solid #E6E6E6;
+    font-family: "Poppins-Regular";
+    margin-bottom: 24px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.left-container {
+    padding: 12px 15px 8px 15px;
+    margin-bottom: 8px;
+    border: 1px solid #E6E6E6;
+    border-radius: 8px;
+}
+
+.left-container .process {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    padding: 4px;
+}
+
+.left-container h5 {
+    font-family: "Poppins-Medium";
+    font-size: 16px;
+}
+
+.left-container ul {
+    list-style: none;
+    padding-left: 0rem;
+}
+
+.left-container ul li {
+    margin-bottom: 12px;
+    font-family: "Poppins-Regular";
+    display: flex;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.left-container li div:hover {
+    border-radius: 8px;
+    color: #e39300;
+    background-color: #fef4eb;
+    transition: color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.left-container li div {
+    align-items: center;
+    padding: 4px;
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.left-container li div:hover svg {
+    transition: color .15s ease-in-out, box-shadow .15s ease-in-out;
+    color: #e39300;
+}
+
+.left-container svg {
+    width: 20px;
+}
+
+.side-profile-menu .left-container .active-edit {
+    border-radius: 0 !important;
+    border-right: 3px solid #e39300 !important;
+    border-radius: 8px;
+    color: #e39300;
+    background-color: #fef4eb;
+    transition: color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+}
+
+.side-profile-menu .left-container .active-edit svg {
+    color: #e39300;
+    transition: color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.left-container li div:hover.export svg {
+    transition: color .15s ease-in-out, box-shadow .15s ease-in-out;
+    fill: #e39300;
+}

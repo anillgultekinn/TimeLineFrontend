@@ -1,0 +1,99 @@
+.workhour-page {
+    font-family: "Poppins-Regular";
+}
+
+.workhour-page .workhour-page-info {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #E6E6E6;
+    padding: 12px 24px;
+    border-radius: 8px;
+}
+
+.workhour-page .workhour-page-info h5 {
+    font-size: 16px;
+    font-family: 'Poppins-Medium';
+    margin-bottom: 0 !important;
+    align-content: center;
+}
+
+.workhour-page .workhour-page-info svg {
+    cursor: pointer;
+    color: #e39300;
+}
+
+.workhour-page .workhour-page-info p {
+    cursor: pointer;
+
+}
+
+.workhour-page-cart {
+    margin-top: 24px;
+    display: flex;
+    border: 1px solid #E6E6E6;
+    flex-direction: column;
+    padding: 12px 24px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.workhour-page-cart .workhour-page-top {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 4px;
+    font-family: 'Poppins-Medium';
+}
+
+.workhour-page-content {
+    padding: 12px;
+    gap: 24px;
+    justify-content: space-between;
+}
+
+.workhour-page-content span {
+    position: absolute;
+    top: 5;
+    right: 10px;
+    cursor: pointer;
+}
+
+.workhour-page-form input {
+    padding: 12px 18px;
+    border-radius: 8px;
+    background-color: #120c0c18;
+    border: 1px solid #e6e6e6;
+}
+
+.workhour-page-form .input-area-title {
+    display: flex;
+    width: 100%;
+    margin-left: 72px;
+}
+
+.workhour-page-form .workhour-select {
+    padding: 12px 24px;
+    border-radius: 8px;
+    background-color: #120c0c18;
+    border: 1px solid #e6e6e6;
+    width: 100%;
+}
+
+
+.workhour-page-form .form-control {
+    padding: 12px 24px;
+    border-radius: 8px;
+    background-color: #120c0c18;
+    border: 1px solid #e6e6e6;
+    width: 100%;
+}
+
+.workhour-page-form .workhour-modal-footer-button {
+    background-color: #e39300;
+    color: white;
+    border: 0;
+}
+
+.workhour-page-form .workhour-modal-footer-button:hover {
+    background-color: #f27a1a;
+}
