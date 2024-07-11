@@ -14,13 +14,19 @@ import { Paginate } from '../../models/paginate';
 import SelectInput from '../../utilities/customFormControls/selectInput';
 import GetListAccountResponse from '../../models/responses/account/getListAccountResponse';
 import accountService from '../../services/accountService';
+import WorkHourFilterRequest from '../../models/requests/filter/workHourFilterRequest';
 
 export default function AdminWorkHour() {
 
     const [workHours, setWorkHours] = useState<Paginate<GetListWorkHourResponse>>();
     const [accounts, setAccounts] = useState<Paginate<GetListAccountResponse>>();
 
-
+    const [filteredAccount, setFilteredAccount] = useState<Paginate<GetListAccountResponse>>();
+    const [filteredWorkHours, setFilteredWorkHours] = useState<Paginate<GetListWorkHourResponse>>();
+    const [filterParametersState, setFilterParametersState] = useState<WorkHourFilterRequest>({
+        requestingAccountId: "-1",
+        month: "-1"
+    });
     const [show, setShow] = useState(false);
     const user = authService.getUserInfo();
 
@@ -30,43 +36,67 @@ export default function AdminWorkHour() {
 
     const [pageIndexState, setPageIndexState] = useState<any>(0)
 
-
     useEffect(() => {
         accountService.getAll(0, 100).then(result => {
             setAccounts(result.data)
-            console.log(result.data);
+            setFilteredAccount(result.data);
         });
     }, []);
 
+    const handleFilter = async (values: any) => {
+        console.log("handlefilter çalıştı");
+        setPageIndexState(0);
+        const filterRequest: WorkHourFilterRequest = {
+            requestingAccountId: values.accountId,
+            month: values.month
+        }
+        setFilterParametersState(filterRequest);
 
+        const response = await workHourService.getByFilter(filterParametersState, pageIndexState, 10);
+        if (response.data) {
+            setWorkHours(response.data);
+        }
+    }
+
+    useEffect(() => {
+        getAllWorkHour();
+    }, [filterParametersState])
 
     useEffect(() => {
         getAllWorkHour();
     }, [pageIndexState, userId])
 
 
-    const getAllWorkHour = () => {
+    const getAllWorkHour = async () => {
+        console.log("PAGEıNDEX= " + pageIndexState);
         if (userId) {
-            workHourService.getAll(0, 10).then(result => {
-                setWorkHours(result.data);
-            })
+
+            console.log(filterParametersState);
+            const response = await workHourService.getByFilter(filterParametersState, pageIndexState, 10);
+            if (response.data) {
+                setWorkHours(response.data);
+            }
+
+
+            // workHourService.getAll(pageIndexState, 10).then(result => {
+            //     setWorkHours(result.data);
+            //     setFilteredWorkHours(result.data);
+            // })
         }
     }
 
     const addWorkHourInitialValues = {
         startHour: "",
         endHour: "",
-        studyDate: "",
+        studyDate: ""
     };
 
     const initialValues = {
-        startHour: "",
-        endHour: "",
-        studyDate: "",
+        month: "-1",
+        accountId: "-1"
     };
 
     const handleAddWorkHour = async (values: any) => {
-        console.log("workHour" + values);
 
         const addWorkHour: AddWorkHourRequest = {
             accountId: user.id,
@@ -85,21 +115,22 @@ export default function AdminWorkHour() {
 
     const formatDate = (date: any) => {
         const inputDate = new Date(date);
-        const day = String(inputDate.getDate()).padStart(2, '0');
-        const month = String(inputDate.getMonth() + 1).padStart(2, '0');
-        const year = inputDate.getFullYear();
-
-        const formattedDate = `${day}-${month}-${year}`;
+        const formattedDate = inputDate.toLocaleDateString('tr-TR', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        });
         return formattedDate;
-    }
+    };
 
-    useEffect(() => {
-        if (pageIndexState !== undefined) {
-            workHourService.getAll(pageIndexState, 10).then(result => {
-                setWorkHours(result.data);
-            });
-        }
-    }, [pageIndexState]);
+    // useEffect(() => {
+    //     if (pageIndexState !== undefined) {
+    //         workHourService.getAll(pageIndexState, 10).then(result => {
+    //             setWorkHours(result.data);
+    //         });
+    //     }
+    // }, [pageIndexState]);
+
 
     function changePageIndex(pageIndex: any) {
         setPageIndexState(pageIndex);
@@ -144,54 +175,63 @@ export default function AdminWorkHour() {
                         </p>
                     </div>
 
-                    <Formik
-                        initialValues={initialValues}
-                        onSubmit={(values) => {
-                            handleAddWorkHour(values)
-
-                        }}>
-                        <Form className="admin-worhour-page-form" >
-                            <Row>
-
-                                <Col md={3} className=' mb-3'>
-
-                                    <SelectInput
-                                        name="accountId"
-                                        className="account-select"
-                                        component="select"
-                                    >
-                                        <option value="account">Kişiyi seçiniz</option>
-                                        {accounts && accounts.items.map((account, index) => (
-                                            <option key={index} value={account.firstName}>
-                                                {account.firstName}
-                                            </option>
-                                        ))}
-                                    </SelectInput>
-                                </Col>
-
-                                <Col md={3} className='mb-3'>
-                                    <SelectInput
-                                        name="accountId"
-                                        className="account-select"
-                                        component="select"
-                                    >
-                                        <option value="account">Ay seçiniz</option>
-                                        {workHours && [...new Set(workHours.items.map(workHour => new Date(workHour.studyDate).getMonth()))].map((monthIndex, index) => {
-                                            const monthName = new Date(2024, monthIndex).toLocaleString('default', { month: 'long' }); // Get month name
-                                            return (
-                                                <option key={index} value={monthName}>
-                                                    {monthName}
+                    <div>
+                        <Formik
+                            initialValues={initialValues}
+                            onSubmit={(values) => {
+                                handleFilter(values)
+                            }}>
+                            <Form className="admin-workhour-page-form" >
+                                <Row>
+                                    <Col md={3} className=' mb-3'>
+                                        <SelectInput
+                                            name="accountId"
+                                            className="account-select"
+                                            component="select"
+                                        >
+                                            <option value="-1">Kişiyi seçiniz</option>
+                                            {accounts && accounts.items.map((account, index) => (
+                                                <option key={index} value={String(account.id)}>
+                                                    {account.firstName}
                                                 </option>
-                                            );
-                                        })}
-                                    </SelectInput>
+                                            ))}
+                                        </SelectInput>
+                                    </Col>
 
-                                </Col>
-                            </Row>
-                        </Form>
+                                    <Col md={3} className='mb-3'>
+                                        <SelectInput
+                                            name="month"
+                                            className="account-select"
+                                            component="select"
+                                        >
+                                            <option value="-1">Ay seçiniz</option>
+                                            <option value="1">Ocak</option>
+                                            <option value="2">Şubat</option>
+                                            <option value="3">Mart</option>
+                                            <option value="4">Nisan</option>
+                                            <option value="5">Mayıs</option>
+                                            <option value="6">Haziran</option>
+                                            <option value="7">Temmuz</option>
+                                            <option value="8">Ağustos</option>
+                                            <option value="9">Eylül</option>
+                                            <option value="10">Ekim</option>
+                                            <option value="11">Kasım</option>
+                                            <option value="12">Aralık</option>
 
+                                        </SelectInput>
+                                    </Col>
 
-                    </Formik>
+                                    <Col md={6} className='mb-3'>
+                                        <Button className="mt-3 mr-5" type="submit">
+                                            Kaydet
+                                        </Button>
+                                    </Col>
+                                </Row>
+
+                            </Form>
+                        </Formik>
+
+                    </div>
 
                     <Modal show={show} onHide={handleClose} animation={false}>
                         <Modal.Header closeButton>
@@ -206,14 +246,14 @@ export default function AdminWorkHour() {
 
                                 }}>
 
-                                <Form className="admin-worhour-page-form" >
+                                <Form className="admin-workhour-page-form" >
                                     <Row >
                                         <Col md={6} className=' mb-5 mt-4'>
                                             <span>Başlangıç Saati</span>
                                             <TextInput
                                                 type="time"
                                                 name="startHour"
-                                                className=" admin-worhour-select"
+                                                className=" admin-workhour-select"
                                                 component="select"
                                             >
 
@@ -225,7 +265,7 @@ export default function AdminWorkHour() {
                                             <TextInput
                                                 type="time"
                                                 name="endHour"
-                                                className=" admin-worhour-select"
+                                                className=" admin-workhour-select"
                                                 component="select"
                                             >
 
@@ -239,7 +279,7 @@ export default function AdminWorkHour() {
                                             <TextInput
                                                 type="date"
                                                 name="studyDate"
-                                                className=" admin-worhour-select"
+                                                className=" admin-workhour-select"
                                                 component="select"
                                             >
                                             </TextInput>
@@ -275,7 +315,7 @@ export default function AdminWorkHour() {
                             {workHours?.items.map((workHour: any) => (
                                 <tr >
                                     <td data-label="firstName">{workHour.firstName}</td>
-                                    <td data-label="firstName">{workHour.lastName}</td>
+                                    <td data-label="lastname">{workHour.lastName}</td>
                                     <td data-label="startHour">{workHour.startHour}</td>
                                     <td data-label="endHour">{workHour.endHour}</td>
                                     <td data-label="email">{formatDate(workHour.studyDate)}</td>

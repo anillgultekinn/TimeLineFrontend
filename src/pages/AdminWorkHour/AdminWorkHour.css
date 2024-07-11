@@ -1,8 +1,8 @@
-.admin-worhour-page {
+.admin-workhour-page {
     font-family: "Poppins-Regular";
 }
 
-.admin-worhour-page .admin-worhour-page-info {
+.admin-workhour-page .admin-workhour-page-info {
     display: flex;
     justify-content: space-between;
     border: 1px solid #E6E6E6;
@@ -10,24 +10,24 @@
     border-radius: 8px;
 }
 
-.admin-worhour-page .admin-worhour-page-info h5 {
+.admin-workhour-page .admin-workhour-page-info h5 {
     font-size: 16px;
     font-family: 'Poppins-Medium';
     margin-bottom: 0 !important;
     align-content: center;
 }
 
-.admin-worhour-page .admin-worhour-page-info svg {
+.admin-workhour-page .admin-workhour-page-info svg {
     cursor: pointer;
     color: #e39300;
 }
 
-.admin-worhour-page .admin-worhour-page-info p {
+.admin-workhour-page .admin-workhour-page-info p {
     cursor: pointer;
 
 }
 
-.admin-worhour-page-cart {
+.admin-workhour-page-cart {
     margin-top: 24px;
     display: flex;
     border: 1px solid #E6E6E6;
@@ -37,7 +37,7 @@
     position: relative;
 }
 
-.admin-worhour-page-cart .admin-worhour-page-top {
+.admin-workhour-page-cart .admin-workhour-page-top {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -45,33 +45,33 @@
     font-family: 'Poppins-Medium';
 }
 
-.admin-worhour-page-content {
+.admin-workhour-page-content {
     padding: 12px;
     gap: 24px;
     justify-content: space-between;
 }
 
-.admin-worhour-page-content span {
+.admin-workhour-page-content span {
     position: absolute;
     top: 5;
     right: 10px;
     cursor: pointer;
 }
 
-.admin-worhour-page-form input {
+.admin-workhour-page-form input {
     padding: 12px 18px;
     border-radius: 8px;
     background-color: #120c0c18;
     border: 1px solid #e6e6e6;
 }
 
-.admin-worhour-page-form .input-area-title {
+.admin-workhour-page-form .input-area-title {
     display: flex;
     width: 100%;
     margin-left: 72px;
 }
 
-.admin-worhour-page-form .admin-worhour-select {
+.admin-workhour-page-form .admin-workhour-select {
     padding: 12px 24px;
     border-radius: 8px;
     background-color: #120c0c18;
@@ -80,7 +80,7 @@
 }
 
 
-.admin-worhour-page-form .form-control {
+.admin-workhour-page-form .form-control {
     padding: 12px 24px;
     border-radius: 8px;
     background-color: #120c0c18;
@@ -88,13 +88,13 @@
     width: 100%;
 }
 
-.admin-worhour-page-form .admin-worhour-modal-footer-button {
+.admin-workhour-page-form .admin-workhour-modal-footer-button {
     background-color: #e39300;
     color: white;
     border: 0;
 }
 
-.admin-worhour-page-form .admin-worhour-modal-footer-button:hover {
+.admin-workhour-page-form .admin-workhour-modal-footer-button:hover {
     background-color: #f27a1a;
 }
 
@@ -171,7 +171,7 @@
     color: #fff;
 }
 
-.admin-worhour-page-form span {
+.admin-workhour-page-form span {
     display: block;
     margin-bottom: 8px;
     color: black;
@@ -179,7 +179,7 @@
 
 }
 
-.admin-worhour-page-form .account-select {
+.admin-workhour-page-form .account-select {
     padding: 12px 24px;
     margin-top: 12px;
 }

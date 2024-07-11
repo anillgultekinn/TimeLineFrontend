@@ -33,18 +33,11 @@ export default function WorkHour() {
 
     const getWorkHourByAccountId = () => {
         if (userId) {
-            workHourService.getByAccountId(userId, 0, 10).then(result => {
+            workHourService.getByAccountId(userId, pageIndexState, 10).then(result => {
                 setWorkHours(result.data);
             })
         }
     }
-
-    // useEffect(() => {
-    //     workHourService.getByAccountId(user.id, 0, 15).then(result => {
-    //         setWorkHours(result.data.items);
-    //     })
-    // }, [])
-
 
     const initialValues = {
         startHour: "",
@@ -69,16 +62,16 @@ export default function WorkHour() {
             getWorkHourByAccountId();
         }
     }
-
     const formatDate = (date: any) => {
         const inputDate = new Date(date);
-        const day = String(inputDate.getDate()).padStart(2, '0');
-        const month = String(inputDate.getMonth() + 1).padStart(2, '0');
-        const year = inputDate.getFullYear();
-
-        const formattedDate = `${day}-${month}-${year}`;
+        const formattedDate = inputDate.toLocaleDateString('tr-TR', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        });
         return formattedDate;
-    }
+    };
+
 
     useEffect(() => {
         if (pageIndexState !== undefined) {
