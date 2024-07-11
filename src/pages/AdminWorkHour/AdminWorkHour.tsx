@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import "./WorkHour.css"
+import "./AdminWorkHour.css"
 import SideProfileMenu from '../../components/SideProfileMenu/SideProfileMenu'
 import { Button, Col, Modal, Pagination, Row } from 'react-bootstrap';
 import { Formik, Form } from 'formik';
@@ -11,10 +11,15 @@ import "react-datepicker/dist/react-datepicker.css";
 import { toast } from 'react-toastify';
 import GetListWorkHourResponse from '../../models/responses/workHour/getListWorkHourResponse';
 import { Paginate } from '../../models/paginate';
+import SelectInput from '../../utilities/customFormControls/selectInput';
+import GetListAccountResponse from '../../models/responses/account/getListAccountResponse';
+import accountService from '../../services/accountService';
 
-export default function WorkHour() {
+export default function AdminWorkHour() {
 
     const [workHours, setWorkHours] = useState<Paginate<GetListWorkHourResponse>>();
+    const [accounts, setAccounts] = useState<Paginate<GetListAccountResponse>>();
+
 
     const [show, setShow] = useState(false);
     const user = authService.getUserInfo();
@@ -27,24 +32,32 @@ export default function WorkHour() {
 
 
     useEffect(() => {
-        getWorkHourByAccountId();
+        accountService.getAll(0, 100).then(result => {
+            setAccounts(result.data)
+            console.log(result.data);
+        });
+    }, []);
+
+
+
+    useEffect(() => {
+        getAllWorkHour();
     }, [pageIndexState, userId])
 
 
-    const getWorkHourByAccountId = () => {
+    const getAllWorkHour = () => {
         if (userId) {
-            workHourService.getByAccountId(userId, 0, 10).then(result => {
+            workHourService.getAll(0, 10).then(result => {
                 setWorkHours(result.data);
             })
         }
     }
 
-    // useEffect(() => {
-    //     workHourService.getByAccountId(user.id, 0, 15).then(result => {
-    //         setWorkHours(result.data.items);
-    //     })
-    // }, [])
-
+    const addWorkHourInitialValues = {
+        startHour: "",
+        endHour: "",
+        studyDate: "",
+    };
 
     const initialValues = {
         startHour: "",
@@ -66,7 +79,7 @@ export default function WorkHour() {
         if (response.data) {
             toast.success("Mesai Saati Eklendi.");
             handleClose();
-            getWorkHourByAccountId();
+            getAllWorkHour();
         }
     }
 
@@ -82,7 +95,7 @@ export default function WorkHour() {
 
     useEffect(() => {
         if (pageIndexState !== undefined) {
-            workHourService.getByAccountId(userId, pageIndexState, 10).then(result => {
+            workHourService.getAll(pageIndexState, 10).then(result => {
                 setWorkHours(result.data);
             });
         }
@@ -131,6 +144,55 @@ export default function WorkHour() {
                         </p>
                     </div>
 
+                    <Formik
+                        initialValues={initialValues}
+                        onSubmit={(values) => {
+                            handleAddWorkHour(values)
+
+                        }}>
+                        <Form className="admin-worhour-page-form" >
+                            <Row>
+
+                                <Col md={3} className=' mb-3'>
+
+                                    <SelectInput
+                                        name="accountId"
+                                        className="account-select"
+                                        component="select"
+                                    >
+                                        <option value="account">Kişiyi seçiniz</option>
+                                        {accounts && accounts.items.map((account, index) => (
+                                            <option key={index} value={account.firstName}>
+                                                {account.firstName}
+                                            </option>
+                                        ))}
+                                    </SelectInput>
+                                </Col>
+
+                                <Col md={3} className='mb-3'>
+                                    <SelectInput
+                                        name="accountId"
+                                        className="account-select"
+                                        component="select"
+                                    >
+                                        <option value="account">Ay seçiniz</option>
+                                        {workHours && [...new Set(workHours.items.map(workHour => new Date(workHour.studyDate).getMonth()))].map((monthIndex, index) => {
+                                            const monthName = new Date(2024, monthIndex).toLocaleString('default', { month: 'long' }); // Get month name
+                                            return (
+                                                <option key={index} value={monthName}>
+                                                    {monthName}
+                                                </option>
+                                            );
+                                        })}
+                                    </SelectInput>
+
+                                </Col>
+                            </Row>
+                        </Form>
+
+
+                    </Formik>
+
                     <Modal show={show} onHide={handleClose} animation={false}>
                         <Modal.Header closeButton>
                             <Modal.Title>Mesai Saati Ekleme</Modal.Title>
@@ -138,20 +200,20 @@ export default function WorkHour() {
                         <Modal.Body>
 
                             <Formik
-                                initialValues={initialValues}
+                                initialValues={addWorkHourInitialValues}
                                 onSubmit={(values) => {
                                     handleAddWorkHour(values)
 
                                 }}>
 
-                                <Form className="workhour-page-form" >
+                                <Form className="admin-worhour-page-form" >
                                     <Row >
                                         <Col md={6} className=' mb-5 mt-4'>
                                             <span>Başlangıç Saati</span>
                                             <TextInput
                                                 type="time"
                                                 name="startHour"
-                                                className=" workhour-select"
+                                                className=" admin-worhour-select"
                                                 component="select"
                                             >
 
@@ -163,7 +225,7 @@ export default function WorkHour() {
                                             <TextInput
                                                 type="time"
                                                 name="endHour"
-                                                className=" workhour-select"
+                                                className=" admin-worhour-select"
                                                 component="select"
                                             >
 
@@ -174,11 +236,10 @@ export default function WorkHour() {
                                     <Row >
                                         <Col md={12} className='mb-5'>
                                             <span>Tarih</span>
-
                                             <TextInput
                                                 type="date"
                                                 name="studyDate"
-                                                className=" workhour-select"
+                                                className=" admin-worhour-select"
                                                 component="select"
                                             >
                                             </TextInput>
@@ -193,6 +254,11 @@ export default function WorkHour() {
                         <Modal.Footer>
                         </Modal.Footer>
                     </Modal>
+
+
+
+
+
 
                     <table className="ui celled table mt-3">
                         <thead>

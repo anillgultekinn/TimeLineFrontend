@@ -4,11 +4,24 @@ import LoginResponse from '../models/responses/auth/loginResponse';
 import ChangePasswordRequest from '../models/requests/auth/changePasswordRequest';
 import RegisterRequest from '../models/requests/auth/registerRequest';
 import LoginRequest from '../models/requests/auth/loginRequest';
-class UserService {
-
-    public apiUrl: string;
+import { BaseService } from '../core/services/baseService';
+import GetListUserResponse from '../models/responses/user/getListUserResponse';
+import GetUserResponse from '../models/responses/user/getUserResponse';
+import AddUserRequest from '../models/requests/user/addUserRequest';
+import AddedUserResponse from '../models/responses/user/addedUserResponse';
+import UpdateUserRequest from '../models/requests/user/updateUserRequest';
+import UpdatedUserResponse from '../models/responses/user/updatedUserResponse';
+import { Paginate } from '../models/paginate';
+class UserService extends BaseService<
+    Paginate<GetListUserResponse>,
+    GetUserResponse,
+    AddUserRequest,
+    AddedUserResponse,
+    UpdateUserRequest,
+    UpdatedUserResponse> {
     constructor() {
-        this.apiUrl = "Users";
+        super();
+        this.apiUrl = "WorkHours";
     }
 
     loginUser(loginUserRequest: LoginRequest): Promise<AxiosResponse<LoginResponse, any>> {
