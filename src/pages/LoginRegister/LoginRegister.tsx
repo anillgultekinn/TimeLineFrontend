@@ -1,5 +1,3 @@
-
-
 import { Formik, Form } from 'formik';
 import { Button, Tab, Tabs } from 'react-bootstrap';
 import TextInput from '../../utilities/customFormControls/textInput';
@@ -58,9 +56,7 @@ export default function LoginRegister() {
                                 onSubmit={(values) => {
                                     authService.register(values).then(response => {
                                         if (response.data !== undefined) {
-                                            navigate("/anasayfa");
                                             toast.success("Kayıt Olundu");
-
                                         }
                                     })
                                 }}

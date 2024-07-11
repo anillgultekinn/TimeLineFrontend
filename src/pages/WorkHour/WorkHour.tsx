@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "./WorkHour.css"
 import SideProfileMenu from '../../components/SideProfileMenu/SideProfileMenu'
 import { Button, Col, Modal, Row } from 'react-bootstrap';
@@ -8,14 +8,40 @@ import AddWorkHourRequest from '../../models/requests/workHour/addWorkHourReques
 import authService from '../../services/authService';
 import workHourService from '../../services/workHourService';
 import "react-datepicker/dist/react-datepicker.css";
+import { toast } from 'react-toastify';
+import GetListWorkHourResponse from '../../models/responses/workHour/getListWorkHourResponse';
 
 export default function WorkHour() {
+
+    const [workHours, setWorkHours] = useState<GetListWorkHourResponse[]>([]);
 
     const [show, setShow] = useState(false);
     const user = authService.getUserInfo();
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const userId = user?.id;
+
+
+    useEffect(() => {
+        getWorkHourByAccountId();
+    }, [])
+
+
+    const getWorkHourByAccountId = () => {
+        if (userId) {
+            workHourService.getByAccountId(userId, 0, 10).then(result => {
+                setWorkHours(result.data.items);
+            })
+        }
+    }
+
+
+    // useEffect(() => {
+    //     workHourService.getByAccountId(user.id, 0, 15).then(result => {
+    //         setWorkHours(result.data.items);
+    //     })
+    // }, [])
 
 
     const initialValues = {
@@ -24,17 +50,32 @@ export default function WorkHour() {
         studyDate: "",
     };
 
-    const handleAddWorkHour = async (workHour: any) => {
-        console.log("workHour" + workHour);
+    const handleAddWorkHour = async (values: any) => {
+        console.log("workHour" + values);
 
         const addWorkHour: AddWorkHourRequest = {
             accountId: user.id,
-            startHour: workHour.startHour,
-            endHour: workHour.endHour,
-            studyDate: workHour.studyDate
+            startHour: values.startHour,
+            endHour: values.endHour,
+            studyDate: values.studyDate
         }
-        await workHourService.add(addWorkHour);
-        console.log("addWorkHour" + addWorkHour);
+        const response = await workHourService.add(addWorkHour);
+
+        if (response.data) {
+            toast.success("Mesai Saati Eklendi.");
+            handleClose();
+            getWorkHourByAccountId();
+        }
+    }
+
+    const formatDate = (date: any) => {
+        const inputDate = new Date(date);
+        const day = String(inputDate.getDate()).padStart(2, '0');
+        const month = String(inputDate.getMonth() + 1).padStart(2, '0');
+        const year = inputDate.getFullYear();
+
+        const formattedDate = `${day}-${month}-${year}`;
+        return formattedDate;
     }
 
 
@@ -118,26 +159,25 @@ export default function WorkHour() {
 
                     <table className="ui celled table mt-3">
                         <thead>
-                            <tr><th>Name</th>
-                                <th>Age</th>
-                                <th>Job</th>
-                            </tr></thead>
+                            <tr>
+                                <th> Adı</th>
+                                <th> Soyadı</th>
+                                <th>Giriş Saati</th>
+                                <th>Çıkış Saati</th>
+                                <th>Çalışılan Tarih</th>
+                            </tr>
+                        </thead>
                         <tbody>
-                            <tr>
-                                <td data-label="Name">James</td>
-                                <td data-label="Age">24</td>
-                                <td data-label="Job">Engineer</td>
-                            </tr>
-                            <tr>
-                                <td data-label="Name">Jill</td>
-                                <td data-label="Age">26</td>
-                                <td data-label="Job">Engineer</td>
-                            </tr>
-                            <tr>
-                                <td data-label="Name">Elyse</td>
-                                <td data-label="Age">24</td>
-                                <td data-label="Job">Designer</td>
-                            </tr>
+                            {workHours.map((workHour: any) => (
+                                <tr >
+                                    <td data-label="firstName">{workHour.firstName}</td>
+                                    <td data-label="firstName">{workHour.lastName}</td>
+                                    <td data-label="startHour">{workHour.startHour}</td>
+                                    <td data-label="endHour">{workHour.endHour}</td>
+                                    <td data-label="email">{formatDate(workHour.studyDate)}</td>
+                                </tr>
+                            ))}
+
                         </tbody>
                     </table>
 
