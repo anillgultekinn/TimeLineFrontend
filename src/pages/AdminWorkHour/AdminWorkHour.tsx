@@ -44,15 +44,13 @@ export default function AdminWorkHour() {
     }, []);
 
     const handleFilter = async (values: any) => {
-        console.log("handlefilter çalıştı");
         setPageIndexState(0);
         const filterRequest: WorkHourFilterRequest = {
-            requestingAccountId: values.accountId,
+            requestingAccountId: values.requestingAccountId,
             month: values.month
         }
-        setFilterParametersState(filterRequest);
 
-        const response = await workHourService.getByFilter(filterParametersState, pageIndexState, 10);
+        const response = await workHourService.getByFilter(filterRequest, pageIndexState, 10);
         if (response.data) {
             setWorkHours(response.data);
         }
@@ -68,10 +66,7 @@ export default function AdminWorkHour() {
 
 
     const getAllWorkHour = async () => {
-        console.log("PAGEıNDEX= " + pageIndexState);
         if (userId) {
-
-            console.log(filterParametersState);
             const response = await workHourService.getByFilter(filterParametersState, pageIndexState, 10);
             if (response.data) {
                 setWorkHours(response.data);
@@ -93,7 +88,7 @@ export default function AdminWorkHour() {
 
     const initialValues = {
         month: "-1",
-        accountId: "-1"
+        requestingAccountId: "-1"
     };
 
     const handleAddWorkHour = async (values: any) => {
@@ -185,9 +180,20 @@ export default function AdminWorkHour() {
                                 <Row>
                                     <Col md={3} className=' mb-3'>
                                         <SelectInput
-                                            name="accountId"
+                                            name="requestingAccountId"
                                             className="account-select"
                                             component="select"
+
+                                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                                                const selectedAccount = e.target.value;
+                                                console.log(selectedAccount);
+                                                setFilterParametersState(prevState => ({
+                                                    ...prevState,
+                                                    requestingAccountId: selectedAccount
+                                                }));
+                                                console.log(filterParametersState);
+                                                handleFilter({ ...filterParametersState, requestingAccountId: selectedAccount });
+                                            }}
                                         >
                                             <option value="-1">Kişiyi seçiniz</option>
                                             {accounts && accounts.items.map((account, index) => (
@@ -203,6 +209,15 @@ export default function AdminWorkHour() {
                                             name="month"
                                             className="account-select"
                                             component="select"
+
+                                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                                                const selectedMonth = e.target.value;
+                                                setFilterParametersState(prevState => ({
+                                                    ...prevState,
+                                                    month: selectedMonth
+                                                }));
+                                                handleFilter({ ...filterParametersState, month: selectedMonth });
+                                            }}
                                         >
                                             <option value="-1">Ay seçiniz</option>
                                             <option value="1">Ocak</option>
@@ -221,11 +236,11 @@ export default function AdminWorkHour() {
                                         </SelectInput>
                                     </Col>
 
-                                    <Col md={6} className='mb-3'>
+                                    {/* <Col md={6} className='mb-3'>
                                         <Button className="mt-3 mr-5" type="submit">
                                             Kaydet
                                         </Button>
-                                    </Col>
+                                    </Col> */}
                                 </Row>
 
                             </Form>
@@ -294,10 +309,6 @@ export default function AdminWorkHour() {
                         <Modal.Footer>
                         </Modal.Footer>
                     </Modal>
-
-
-
-
 
 
                     <table className="ui celled table mt-3">
