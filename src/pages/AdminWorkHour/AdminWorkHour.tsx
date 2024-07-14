@@ -91,22 +91,22 @@ export default function AdminWorkHour() {
         requestingAccountId: "-1"
     };
 
-    const handleAddWorkHour = async (values: any) => {
+    // const handleAddWorkHour = async (values: any) => {
 
-        const addWorkHour: AddWorkHourRequest = {
-            accountId: user.id,
-            startHour: values.startHour,
-            endHour: values.endHour,
-            studyDate: values.studyDate
-        }
-        const response = await workHourService.add(addWorkHour);
+    //     const addWorkHour: AddWorkHourRequest = {
+    //         accountId: user.id,
+    //         startHour: values.startHour,
+    //         endHour: values.endHour,
+    //         studyDate: values.studyDate
+    //     }
+    //     const response = await workHourService.add(addWorkHour);
 
-        if (response.data) {
-            toast.success("Mesai Saati Eklendi.");
-            handleClose();
-            getAllWorkHour();
-        }
-    }
+    //     if (response.data) {
+    //         toast.success("Mesai Saati Eklendi.");
+    //         handleClose();
+    //         getAllWorkHour();
+    //     }
+    // }
 
     const formatDate = (date: any) => {
         const inputDate = new Date(date);
@@ -162,12 +162,6 @@ export default function AdminWorkHour() {
                         <h5>
                             Mesai Saati Bilgilerim
                         </h5>
-                        <p onClick={handleShow} >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none">
-                                <path d="M12 4V20M20 12H4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                            Yeni Mesai Saati Ekle
-                        </p>
                     </div>
 
                     <div>
@@ -235,80 +229,12 @@ export default function AdminWorkHour() {
 
                                         </SelectInput>
                                     </Col>
-
-                                    {/* <Col md={6} className='mb-3'>
-                                        <Button className="mt-3 mr-5" type="submit">
-                                            Kaydet
-                                        </Button>
-                                    </Col> */}
                                 </Row>
-
                             </Form>
                         </Formik>
-
                     </div>
 
-                    <Modal show={show} onHide={handleClose} animation={false}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Mesai Saati Ekleme</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
 
-                            <Formik
-                                initialValues={addWorkHourInitialValues}
-                                onSubmit={(values) => {
-                                    handleAddWorkHour(values)
-
-                                }}>
-
-                                <Form className="admin-workhour-page-form" >
-                                    <Row >
-                                        <Col md={6} className=' mb-5 mt-4'>
-                                            <span>Başlangıç Saati</span>
-                                            <TextInput
-                                                type="time"
-                                                name="startHour"
-                                                className=" admin-workhour-select"
-                                                component="select"
-                                            >
-
-                                            </TextInput>
-                                        </Col>
-                                        <Col md={6} className='mb-5 mt-4 '>
-                                            <span>Bitiş Saati</span>
-
-                                            <TextInput
-                                                type="time"
-                                                name="endHour"
-                                                className=" admin-workhour-select"
-                                                component="select"
-                                            >
-
-                                            </TextInput>
-                                        </Col>
-                                    </Row>
-
-                                    <Row >
-                                        <Col md={12} className='mb-5'>
-                                            <span>Tarih</span>
-                                            <TextInput
-                                                type="date"
-                                                name="studyDate"
-                                                className=" admin-workhour-select"
-                                                component="select"
-                                            >
-                                            </TextInput>
-                                        </Col>
-                                    </Row>
-                                    <Button className="mb-2" type="submit">
-                                        Kaydet
-                                    </Button>
-                                </Form>
-                            </Formik>
-                        </Modal.Body>
-                        <Modal.Footer>
-                        </Modal.Footer>
-                    </Modal>
 
 
                     <table className="ui celled table mt-3">
@@ -319,7 +245,7 @@ export default function AdminWorkHour() {
                                 <th>Giriş Saati</th>
                                 <th>Çıkış Saati</th>
                                 <th>Çalışılan Tarih</th>
-                                <th>Çalışılan Saat</th>
+                                <th>Çalışılan Süre</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -329,7 +255,7 @@ export default function AdminWorkHour() {
                                     <td data-label="lastname">{workHour.lastName}</td>
                                     <td data-label="startHour">{workHour.startHour}</td>
                                     <td data-label="endHour">{workHour.endHour}</td>
-                                    <td data-label="email">{formatDate(workHour.studyDate)}</td>
+                                    <td data-label="studyDate">{formatDate(workHour.studyDate)}</td>
                                     <td>{calculateWorkHours(workHour.startHour, workHour.endHour)}</td>
                                 </tr>
                             ))}

@@ -8,6 +8,9 @@ import { authActions } from '../../store/auth/authSlice';
 import { userActions } from '../../store/user/userSlice';
 import authService from '../../services/authService';
 import { toast } from 'react-toastify';
+import { REQUIRED_MESSAGE } from '../../environment/messages';
+import * as Yup from 'yup';
+import tokenService from '../../core/services/tokenService';
 
 export default function LoginRegister() {
     const loginInitialValues = { email: "", password: "" }
@@ -15,6 +18,23 @@ export default function LoginRegister() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const user = authService.getUserInfo();
+
+
+    const redisterValidationSchema = Yup.object().shape({
+        email: Yup.string().required(REQUIRED_MESSAGE),
+        password: Yup.string().required(REQUIRED_MESSAGE),
+        firstName: Yup.string().required(REQUIRED_MESSAGE),
+        lastName: Yup.string().required(REQUIRED_MESSAGE),
+
+    });
+
+    const loginValidationSchema = Yup.object().shape({
+        email: Yup.string().required(REQUIRED_MESSAGE),
+        password: Yup.string().required(REQUIRED_MESSAGE),
+
+    });
 
     return (
         <div className='login-register-page container' >
@@ -28,6 +48,7 @@ export default function LoginRegister() {
                     >
                         <Tab eventKey="login" title="Giriş Yap">
                             <Formik
+                                validationSchema={loginValidationSchema}
                                 initialValues={loginInitialValues}
                                 onSubmit={(values) => {
                                     authService.login(values).then(response => {
@@ -52,10 +73,14 @@ export default function LoginRegister() {
                         </Tab>
                         <Tab eventKey="register" title="Üye Ol">
                             <Formik
+                                validationSchema={redisterValidationSchema}
                                 initialValues={registerInitialValues}
                                 onSubmit={(values) => {
                                     authService.register(values).then(response => {
                                         if (response.data !== undefined) {
+                                            tokenService.setToken(response.data);
+                                            authService.getUserInfo();
+                                            navigate("/anasayfa");
                                             toast.success("Kayıt Olundu");
                                         }
                                     })
