@@ -83,12 +83,10 @@ export default function WorkHour() {
         }
 
         const response = await workHourService.update(updateWorkHour);
-
         if (response.data) {
             toast.success("Güncellendi");
             handleClose();
             getWorkHourByAccountId();
-
         }
     }
 

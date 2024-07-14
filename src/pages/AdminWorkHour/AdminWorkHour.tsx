@@ -21,25 +21,19 @@ export default function AdminWorkHour() {
     const [workHours, setWorkHours] = useState<Paginate<GetListWorkHourResponse>>();
     const [accounts, setAccounts] = useState<Paginate<GetListAccountResponse>>();
 
-    const [filteredAccount, setFilteredAccount] = useState<Paginate<GetListAccountResponse>>();
-    const [filteredWorkHours, setFilteredWorkHours] = useState<Paginate<GetListWorkHourResponse>>();
     const [filterParametersState, setFilterParametersState] = useState<WorkHourFilterRequest>({
         requestingAccountId: "-1",
         month: "-1"
     });
     const [show, setShow] = useState(false);
     const user = authService.getUserInfo();
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
     const userId = user?.id;
 
     const [pageIndexState, setPageIndexState] = useState<any>(0)
 
     useEffect(() => {
         accountService.getAll(0, 100).then(result => {
-            setAccounts(result.data)
-            setFilteredAccount(result.data);
+            setAccounts(result.data);
         });
     }, []);
 
@@ -71,42 +65,13 @@ export default function AdminWorkHour() {
             if (response.data) {
                 setWorkHours(response.data);
             }
-
-
-            // workHourService.getAll(pageIndexState, 10).then(result => {
-            //     setWorkHours(result.data);
-            //     setFilteredWorkHours(result.data);
-            // })
         }
     }
-
-    const addWorkHourInitialValues = {
-        startHour: "",
-        endHour: "",
-        studyDate: ""
-    };
 
     const initialValues = {
         month: "-1",
         requestingAccountId: "-1"
     };
-
-    // const handleAddWorkHour = async (values: any) => {
-
-    //     const addWorkHour: AddWorkHourRequest = {
-    //         accountId: user.id,
-    //         startHour: values.startHour,
-    //         endHour: values.endHour,
-    //         studyDate: values.studyDate
-    //     }
-    //     const response = await workHourService.add(addWorkHour);
-
-    //     if (response.data) {
-    //         toast.success("Mesai Saati Eklendi.");
-    //         handleClose();
-    //         getAllWorkHour();
-    //     }
-    // }
 
     const formatDate = (date: any) => {
         const inputDate = new Date(date);
@@ -117,15 +82,6 @@ export default function AdminWorkHour() {
         });
         return formattedDate;
     };
-
-    // useEffect(() => {
-    //     if (pageIndexState !== undefined) {
-    //         workHourService.getAll(pageIndexState, 10).then(result => {
-    //             setWorkHours(result.data);
-    //         });
-    //     }
-    // }, [pageIndexState]);
-
 
     function changePageIndex(pageIndex: any) {
         setPageIndexState(pageIndex);
@@ -139,7 +95,6 @@ export default function AdminWorkHour() {
                 <Pagination.Item onClick={() => changePageIndex(pageIndex)} key={pageIndex} active={pageIndex === pageIndexState}> {pageIndex + 1} </Pagination.Item>
             );
         }
-
 
     function calculateWorkHours(startHour: string, endHour: string) {
         const start = new Date(`2000-01-01T${startHour}`);
