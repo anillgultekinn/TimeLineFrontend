@@ -115,7 +115,7 @@ export default function AdminWorkHour() {
                 <div className="col-md-9 mt-5">
                     <div className="workhour-page-info" >
                         <h5>
-                            Mesai Saati Bilgilerim
+                            Çalışma Saati Bilgileri
                         </h5>
                     </div>
 
@@ -197,20 +197,20 @@ export default function AdminWorkHour() {
                             <tr>
                                 <th> Adı</th>
                                 <th> Soyadı</th>
-                                <th>Giriş Saati</th>
-                                <th>Çıkış Saati</th>
-                                <th>Çalışılan Tarih</th>
-                                <th>Çalışılan Süre</th>
+                                <th scope="col">Tarih</th>
+                                <th scope="col">Başlangıç Saati</th>
+                                <th scope="col">Bitiş Saati</th>
+                                <th scope="col">Toplam Saat</th>
                             </tr>
                         </thead>
                         <tbody>
                             {workHours?.items.map((workHour: any) => (
                                 <tr >
-                                    <td data-label="firstName">{workHour.firstName}</td>
-                                    <td data-label="lastname">{workHour.lastName}</td>
-                                    <td data-label="startHour">{workHour.startHour}</td>
-                                    <td data-label="endHour">{workHour.endHour}</td>
-                                    <td data-label="studyDate">{formatDate(workHour.studyDate)}</td>
+                                    <td >{workHour.firstName}</td>
+                                    <td >{workHour.lastName}</td>
+                                    <td>{formatDate(workHour.studyDate)}</td>
+                                    <td>{workHour.startHour}</td>
+                                    <td>{workHour.endHour}</td>
                                     <td>{calculateWorkHours(workHour.startHour, workHour.endHour)}</td>
                                 </tr>
                             ))}
