@@ -145,11 +145,14 @@ export default function AdminWorkHour() {
                                             }}
                                         >
                                             <option value="-1">Kişiyi seçiniz</option>
-                                            {accounts && accounts.items.map((account, index) => (
-                                                <option key={index} value={String(account.id)}>
-                                                    {account.firstName}
-                                                </option>
-                                            ))}
+                                            {accounts && accounts.items
+                                                .filter(account => account.firstName !== 'Admin')
+                                                .map((account, index) => (
+                                                    <option key={index} value={String(account.id)}>
+                                                        {account.firstName}
+                                                    </option>
+                                                ))}
+
                                         </SelectInput>
                                     </Col>
 
