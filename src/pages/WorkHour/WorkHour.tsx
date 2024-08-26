@@ -50,6 +50,21 @@ export default function WorkHour() {
         studyDate: "",
     };
 
+    const updateInitialValues = {
+        startHour: selectedWorkHour?.startHour,
+        endHour: selectedWorkHour?.endHour,
+        // studyDate: selectedWorkHour?.studyDate,
+        studyDate: selectedWorkHour?.studyDate ? formatLocalDate(selectedWorkHour.studyDate) : "",
+
+    };
+    function formatLocalDate(date: any) {
+        const localDate = new Date(date);
+        const year = localDate.getFullYear();
+        const month = String(localDate.getMonth() + 1).padStart(2, '0');
+        const day = String(localDate.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
     const handleAddWorkHour = async (values: any) => {
         const addWorkHour: AddWorkHourRequest = {
             accountId: user.id,
@@ -70,16 +85,15 @@ export default function WorkHour() {
         }
     };
 
-
     const handleUpdateWorkHour = async (values: any) => {
+
         const updateWorkHour: UpdateWorkHourRequest = {
             id: selectedWorkHourId,
             accountId: user.id,
             startHour: values.startHour,
             endHour: values.endHour,
             studyDate: values.studyDate
-        };
-
+        }
         const response = await workHourService.update(updateWorkHour);
         if (response.data) {
             toast.success("Güncellendi");
@@ -87,6 +101,7 @@ export default function WorkHour() {
             getWorkHourByAccountId();
         }
     };
+
 
     const handleDeleteWorkHour = async (selectedWorkHourId: any) => {
         toast.success("Çalışma Saati Silindi.");
@@ -97,6 +112,9 @@ export default function WorkHour() {
     const handleOpenUpdateModal = (selectedWorkHourId: string) => {
         setShowUpdateModal(true);
         setSelectedWorkHourId(selectedWorkHourId);
+        workHourService.getById(selectedWorkHourId).then((response) => {
+            setSelectedWorkHour(response.data);
+        })
     };
 
     const formatDate = (date: any) => {
@@ -222,11 +240,7 @@ export default function WorkHour() {
                         </Modal.Header>
                         <Modal.Body>
                             <Formik
-                                initialValues={{
-                                    startHour: selectedWorkHour?.startHour,
-                                    endHour: selectedWorkHour?.endHour,
-                                    studyDate: selectedWorkHour?.studyDate,
-                                }}
+                                initialValues={updateInitialValues}
                                 enableReinitialize
                                 onSubmit={(values) => {
                                     handleUpdateWorkHour(values);
